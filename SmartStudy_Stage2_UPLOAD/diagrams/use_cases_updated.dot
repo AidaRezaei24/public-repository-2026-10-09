@@ -1,0 +1,18 @@
+digraph UseCases {
+  graph [rankdir=LR, bgcolor=white, splines=polyline, label="Stage 2: Updated SmartStudy Use Cases", labelloc=t];
+  node [fontname=Helvetica, fontsize=10];
+  Student [shape=box, style="rounded,filled", fillcolor="#dceafc"];
+  subgraph cluster_system {label="SmartStudy"; color="#7295bc"; style="rounded";
+  Manage [label="Manage course/tasks",shape=ellipse];
+  Priority [label="Rank priorities",shape=ellipse];
+  Planner [label="Preview and approve plan",shape=ellipse];
+  Replan [label="Replan with confirmation",shape=ellipse];
+  Import [label="Extract and confirm deadlines",shape=ellipse];
+  Agent [label="Ask read-only AI tool agent",shape=ellipse];
+  Export [label="Export CSV / CLI",shape=ellipse];
+  Reminder [label="Check in-app reminders",shape=ellipse];
+  }
+  Student -> {Manage Priority Planner Replan Import Agent Export Reminder};
+  LLM [shape=box,label="External LLM"];
+  LLM -> {Import Agent} [style=dashed];
+}

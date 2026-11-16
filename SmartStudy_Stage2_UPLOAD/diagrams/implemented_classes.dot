@@ -1,0 +1,37 @@
+digraph SmartStudy {
+  graph [rankdir=LR, splines=polyline, bgcolor="white", fontname="Helvetica", fontsize=12, nodesep=0.4, ranksep=0.6, label="SmartStudy Stage 2 - Implemented Class Structure", labelloc=t];
+  node [shape=record, style="rounded,filled", color="#7692b0", fillcolor="#eef4fa", fontname="Helvetica", fontsize=10];
+  edge [color="#64809d", arrowsize=0.7, fontsize=9, fontname="Helvetica"];
+  gui [label="{SmartStudyGUI|build_dashboard(); preview_plan(); save_draft()}"];
+  cli [label="{CLI|parser(); execute()}"];
+  controller [fillcolor="#d8e9ff", label="{AgentController (Facade)|handle_request(); preview(); approve();\ladd_task(); import_outline(); export_csv()\l}"];
+  repository [label="{SQLiteRepository|add_task(); update_progress();\llist_tasks(); save_sessions()\l}"];
+  priority [label="{PriorityEngine|rank_tasks()}"];
+  strategy [label="{«interface» IPriorityStrategy|score()}"];
+  deadline [label="{DeadlinePriorityStrategy|score()}"];
+  balanced [label="{BalancedPriorityStrategy|score()}"];
+  planner [label="{SchedulePlanner|generate()}"];
+  checker [label="{ConflictChecker|validate()}"];
+  ai [label="{«interface» ILLMClient|structured()}"];
+  openai [label="{OpenAILLMAdapter|structured()}"];
+  interpreter [label="{IntentInterpreter|interpret()}"];
+  extractor [label="{DeadlineExtractor|extract()}"];
+  explanation [label="{ExplanationService|explain()}"];
+  tools [label="{ToolManager|execute_tool()}"];
+  factory [label="{«abstract» ToolFactory|create()}"];
+  concrete_factory [label="{StudyToolFactory|create()}"];
+  cmd [label="{«interface» ICommand|execute()}"];
+  listcmd [label="{ListTasksCommand + 5 others|execute()}"];
+  event [label="{TaskEventPublisher|subscribe(); notify()}"];
+  reminder [label="{ReminderScheduler|check_deadlines(); on_task_change()}"];
+  refresh [label="{CalendarRefreshListener|on_task_change()}"];
+  gui -> controller; cli -> controller; controller -> repository;
+  controller -> priority; controller -> planner; controller -> tools; controller -> interpreter;
+  controller -> extractor; controller -> explanation; controller -> event;
+  planner -> checker; planner -> priority;
+  priority -> strategy; deadline -> strategy [style=dashed, arrowhead=empty]; balanced -> strategy [style=dashed, arrowhead=empty];
+  openai -> ai [style=dashed, arrowhead=empty]; interpreter -> ai; extractor -> ai; explanation -> ai;
+  tools -> factory; concrete_factory -> factory [style=dashed, arrowhead=empty];
+  concrete_factory -> cmd; listcmd -> cmd [style=dashed, arrowhead=empty];
+  event -> reminder; event -> refresh;
+}
